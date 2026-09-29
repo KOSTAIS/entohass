@@ -1,0 +1,16 @@
+send_command:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: entopizo
+    command_type:
+      required: true
+      example: custom
+      selector:
+        text:
+    data:
+      example: setdigout 1
+      selector:
+        text:

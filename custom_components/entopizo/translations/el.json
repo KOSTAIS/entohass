@@ -1,0 +1,93 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Σύνδεση λογαριασμού Entopizo",
+        "description": "Συνδέσου με το email και τον κωδικό που χρησιμοποιείς στο go.entopizo.gr. Ο κωδικός χρησιμοποιείται μόνο μία φορά για την έκδοση του API token και δεν αποθηκεύεται.",
+        "data": {
+          "email": "Email",
+          "password": "Κωδικός πρόσβασης"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Επανασύνδεση Entopizo",
+        "description": "Το API token για το {email} δεν είναι πλέον έγκυρο (π.χ. μετά από αλλαγή κωδικού). Δώσε τον κωδικό του λογαριασμού για να εκδοθεί νέο.",
+        "data": {
+          "password": "Κωδικός πρόσβασης"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Λάθος email ή κωδικός πρόσβασης.",
+      "cannot_connect": "Αδυναμία σύνδεσης με το Entopizo API.",
+      "unknown": "Απρόσμενο σφάλμα."
+    },
+    "abort": {
+      "already_configured": "Αυτός ο λογαριασμός Entopizo έχει ήδη ρυθμιστεί.",
+      "reauth_successful": "Η επανασύνδεση ολοκληρώθηκε."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Επιλογές Entopizo",
+        "data": {
+          "scan_interval": "Διάστημα ενημέρωσης",
+          "track_events": "Δημιουργία entopizo_event για νέα συμβάντα"
+        },
+        "data_description": {
+          "scan_interval": "Κάθε πόσα δευτερόλεπτα γίνεται ανάγνωση από το Entopizo API.",
+          "track_events": "Τα συμβάντα υπερβολικής ταχύτητας, γεωφράχτη, ανάφλεξης, SOS κ.λπ. από τους κανόνες ειδοποιήσεών σου γίνονται συμβάντα του Home Assistant για χρήση σε αυτοματισμούς."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "speed": { "name": "Ταχύτητα" },
+      "course": { "name": "Κατεύθυνση" },
+      "altitude": { "name": "Υψόμετρο" },
+      "odometer": { "name": "Χιλιόμετρα" },
+      "address": { "name": "Διεύθυνση" },
+      "last_update": { "name": "Τελευταία ενημέρωση" },
+      "stop_duration": { "name": "Διάρκεια στάσης" },
+      "status": {
+        "name": "Κατάσταση",
+        "state": {
+          "online": "Σε σύνδεση",
+          "ack": "Χωρίς σήμα GPS",
+          "offline": "Εκτός σύνδεσης",
+          "engine": "Ρελαντί"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "device_not_found": {
+      "message": "Η επιλεγμένη συσκευή δεν είναι tracker Entopizo ενεργού λογαριασμού."
+    },
+    "command_failed": {
+      "message": "Η αποστολή της εντολής απέτυχε: {error}"
+    }
+  },
+  "services": {
+    "send_command": {
+      "name": "Αποστολή εντολής",
+      "description": "Στέλνει εντολή GPRS σε tracker Entopizo. Οι εντολές ακινητοποίησης επηρεάζουν φυσικά το όχημα — χρησιμοποίησέ τες με προσοχή.",
+      "fields": {
+        "device_id": {
+          "name": "Tracker",
+          "description": "Ο tracker Entopizo στον οποίο θα σταλεί η εντολή."
+        },
+        "command_type": {
+          "name": "Τύπος εντολής",
+          "description": "Τύπος εντολής, π.χ. custom ή τύπος που υποστηρίζει το πρωτόκολλο της συσκευής (engineStop, engineResume, ...)."
+        },
+        "data": {
+          "name": "Δεδομένα",
+          "description": "Περιεχόμενο εντολής όταν ο τύπος είναι custom, π.χ. setdigout 1."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "entity": {
+    "sensor": {
+      "course": { "default": "mdi:compass-outline" },
+      "address": { "default": "mdi:map-marker" },
+      "status": { "default": "mdi:access-point-network" },
+      "stop_duration": { "default": "mdi:timer-sand" },
+      "odometer": { "default": "mdi:counter" }
+    }
+  },
+  "services": {
+    "send_command": { "service": "mdi:console" }
+  }
+}

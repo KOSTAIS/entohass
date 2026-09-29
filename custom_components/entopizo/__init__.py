@@ -10,6 +10,7 @@ from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.service import async_register_admin_service
 from homeassistant.helpers.typing import ConfigType
 
 from .api import EntopizoApi, EntopizoError
@@ -72,7 +73,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             ) from err
         return {"status": result.get("status"), "message": result.get("message")}
 
-    hass.services.async_register(
+    # Commands can immobilize a vehicle, so only administrators may call this.
+    async_register_admin_service(
+        hass,
         DOMAIN,
         SERVICE_SEND_COMMAND,
         async_send_command,

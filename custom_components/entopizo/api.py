@@ -121,19 +121,26 @@ class EntopizoApi:
                 data=data,
                 headers={"Accept": "application/json"},
                 timeout=aiohttp.ClientTimeout(total=REQUEST_TIMEOUT),
+                # Never let the token or password follow a redirect elsewhere.
+                allow_redirects=False,
             ) as resp:
                 if resp.status == 401:
                     raise EntopizoAuthError("user_api_hash is invalid or revoked")
                 if resp.status == 429:
                     raise EntopizoConnectionError("Rate limit exceeded")
-                if resp.status >= 400:
+                if resp.status >= 300:
                     raise EntopizoConnectionError(f"{endpoint} returned HTTP {resp.status}")
                 try:
                     result = await resp.json(content_type=None)
                 except (aiohttp.ContentTypeError, ValueError) as err:
                     raise EntopizoConnectionError(f"{endpoint} returned invalid JSON") from err
         except (aiohttp.ClientError, asyncio.TimeoutError) as err:
-            raise EntopizoConnectionError(f"Error requesting {endpoint}: {err}") from err
+            # aiohttp error messages can contain the request URL, which holds the
+            # user_api_hash for GET requests; report only the error type and drop
+            # the chained exception so the token never reaches the logs.
+            raise EntopizoConnectionError(
+                f"Error requesting {endpoint}: {type(err).__name__}"
+            ) from None
 
         if isinstance(result, dict) and result.get("status") == 0:
             message = result.get("message") or f"{endpoint} failed"
